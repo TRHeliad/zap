@@ -313,7 +313,7 @@ impl<'src> ServerOutput<'src> {
 		self.push_line("else");
 		self.indent();
 		self.push_line("table.move(arguments, read_cursor, queue_size, 1, new_arguments)");
-		self.push_line("table.move(arguments, 1, write_cursor, (queue_size - read_cursor) + 1, new_arguments)");
+		self.push_line("table.move(arguments, 1, write_cursor, (queue_size - read_cursor) + 2, new_arguments)");
 		self.push_line("new_write_cursor = write_cursor + (queue_size - read_cursor) + 1");
 		self.dedent();
 		self.push_line("end");
@@ -335,10 +335,10 @@ impl<'src> ServerOutput<'src> {
 			}
 		}
 		if returns_length == 1 {
-			self.push_line("queue.write_cursor = (write_cursor % new_queue_size) + 1");
+			self.push_line("queue.write_cursor = (new_write_cursor % new_queue_size) + 1");
 		} else {
 			self.push_line(&format!(
-				"queue.write_cursor = ((write_cursor + {}) % new_queue_size) + 1",
+				"queue.write_cursor = ((new_write_cursor + {}) % new_queue_size) + 1",
 				returns_length - 1
 			));
 		}
